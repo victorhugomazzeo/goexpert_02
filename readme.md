@@ -22,23 +22,19 @@ Substitua `01153000` pelo CEP desejado (apenas números).
 ## Saída esperada
 
 ```
-API mais rápida: BrasilAPI
-CEP:        01153-000
-Logradouro: Rua Vitorino Carmilo
-Bairro:     Barra Funda
-Cidade:     São Paulo
-UF:         SP
+Recebido da BrasilAPI.
+Resultado:{"cep":"01153-000","estado":"SP","cidade":"São Paulo","bairro":"Barra Funda","rua":"Rua Vitorino Carmilo"}
 ```
 
-Em caso de timeout:
+A API vencedora varia a cada execução. Em caso de timeout:
 
 ```
-Erro: timeout - nenhuma API respondeu em 1s
+Timeout, nenhum retorno após 1 segundo.
 ```
 
 ## Como funciona
 
 1. Duas goroutines disparam requisições em paralelo (BrasilAPI e ViaCEP).
-2. Um `select` escuta o primeiro canal que retornar.
-3. A resposta vencedora é exibida; a outra é descartada.
+2. Cada goroutine normaliza a resposta para o modelo comum `apiResponse` e a serializa em JSON.
+3. Um `select` consome o **primeiro** resultado que chegar; o mais lento é descartado.
 4. Um `time.After` de 1s aborta tudo se nenhuma responder a tempo.
