@@ -41,4 +41,4 @@ Erro: timeout - nenhuma API respondeu em 1s
 1. Duas goroutines disparam requisições em paralelo (BrasilAPI e ViaCEP).
 2. Um `select` escuta o primeiro canal que retornar.
 3. A resposta vencedora é exibida; a outra é descartada.
-4. Um `context.WithTimeout` de 1s aborta tudo se nenhuma responder a tempo.
+4. Um `time.After` de 1s aborta tudo se nenhuma responder a tempo.
